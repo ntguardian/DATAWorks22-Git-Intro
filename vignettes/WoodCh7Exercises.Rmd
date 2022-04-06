@@ -1,0 +1,73 @@
+---
+title: "Wood Ch. 7 Exercises"
+author: "Curtis Miller"
+date: "4/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 9
+
+*This question is about creating models for calibration of satellite remote
+sensed data. The data frame `chl` contains direct ship based measurements of
+chlorophyll concentrations in the top 5 metres of ocean water, `chl`, as well as
+the corresponding satellite estimate `chl.sw` (actually a multi-year average
+measurement for the location and time of year), along with ocean depth, `bath`,
+day of year, `jul.day` and location, `lon`, `lat`. The data are from the world
+ocean database (see `http://seawifs.gsfc.nasa.gov/SEAWIFS/` for information on
+SeaWifs). `chl` and `chl.sq` do not correlate all that well with each other,
+probably because the reflective characteristics of water tend to change with
+time of year and whether the water is near the coast (and hence full of
+particulate matter) or open ocean. One way of improving the predictive power of
+the satellite observations might be to model the relationship between directly
+measured chlorophyll and remote sensed chlorophyll, viewing the relationship as
+an indicator for water type (near shore vs. open), a model something like*
+
+$$\mathbb{E}(\texttt{chl}_i) = f_1(\texttt{chl.sw}_i) f_2(\texttt{bath}_i)
+f_3(\texttt{jul.day}_i)$$
+
+*might be a reasonable starting point.*
+
+### Part (a)
+
+*Plot the response data and predictors against each other using `pairs`. Notice
+that some predictors have very skewed distributions. It is worth trying some
+simple power transformations in order to get a more even spread of predictors,
+and reduce the chance of a few points being overly influential: find appropriate
+transformations.*
+
+```{r}
+# Your code here
+```
+
+### Part (b)
+
+*Using `mgcv::gam`, try modelling the data using a model of the sort suggested
+(but with predictors transformed as in part (a)). Make sure that you use an
+appropriate family. It will probably help to increase the default basis
+dimensions used for smoothing, somewhat (especially for `jul.day`). Use the
+`"cr"` basis to avoid excessive computational cost.*
+
+```{r}
+# Your code here
+```
+
+### Part (c)
+
+*In this sort of modelling the aim is to improve on simply using the satellite
+measurements as predictions of the direct measurements. Given the large number
+of data, it is easy to end up using rather complex models after quite a lot of
+examination of the data. It is therefore important to check that the model is
+not over-fitting. A sensible way of doing this is to randomly select, say, 90%
+of the data to be fitted by the model, and then to see how well the model
+predicts the other 10% of data. Do this, using proportional deviance explained
+as the measure of fit/prediction. Note that the family you used will contain a
+function `dev.resids`, which you can use to find the deviance of any set of
+predictions.*
+
+```{r}
+# Your code here
+```
