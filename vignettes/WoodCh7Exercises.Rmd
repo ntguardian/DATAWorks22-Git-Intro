@@ -40,8 +40,30 @@ and reduce the chance of a few points being overly influential: find appropriate
 transformations.*
 
 ```{r}
-# Your code here
+library(mgcv)
+library(gamair)
+library(dplyr)
+
+data(chl)
+head(chl)
+
+pairs(chl)
 ```
+
+It seems that `bath` has strange outlier behavior, so we will try to use a power
+transform for it. Longitude and latitude may also be more useful transformed.
+
+```{r}
+chl_transform <- mutate(chl,
+    tr.bath = (bath^(1/4) - 1)/(1/4),
+    tr.lon  = (lon^(1/2) - 1)/(1/2),
+    tr.lat  = (lat^(1/2) - 1)/(1/2))
+pairs(chl_transform)
+```
+
+Note that the transformation parameters for `bath`, `lon`, and `lat` are
+$\frac{1}{4}$, $\frac{1}{2}$, and $\frac{1}{2}$, respectively. These were picked
+by eye.
 
 ### Part (b)
 
