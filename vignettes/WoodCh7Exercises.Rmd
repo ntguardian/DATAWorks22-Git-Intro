@@ -2,7 +2,9 @@
 title: "Wood Ch. 7 Exercises"
 author: "Curtis Miller"
 date: "4/6/2022"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
