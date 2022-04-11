@@ -75,28 +75,14 @@ appropriate family. It will probably help to increase the default basis
 dimensions used for smoothing, somewhat (especially for `jul.day`). Use the
 `"cr"` basis to avoid excessive computational cost.*
 
-Let's consider the range of the response variable:
+Fit a GAM.
 
 ```{r}
-range(chl_transform$chl)
-```
-
-The gamma distribution makes for an attractive potential distribution family,
-due to being non-negative, but unfortunately there are concentrations of zero. A
-quick fix would be to add a small value to the zeroes, reflecting the fact that
-such a concentration likely is an issue with rounding.
-
-```{r}
-chl_transform <- mutate(chl_transform, chl = ifelse(chl == 0, 0.001, chl))
-```
-
-Now fit a GAM.
-
-```{r}
-chl_fit <- bam(chl ~
-                 te(tr.lon, tr.lat, k = 60, bs = 'cr') +
+chl_fit <- gam(chl ~
+                 s(tr.lon, k = 60, bs = 'cr') +
+                 s(tr.lat, k = 60, bs = 'cr') +
                  s(tr.bath, k = 60, bs = 'cr') +
-                 s(jul.day, k = 60, bs = 'cr') +
+                 s(jul.day, k = 120, bs = 'cr') +
                  s(chl.sw, k = 60, bs = 'cr'),
                data = chl_transform,
                family = Gamma(link = "log"),
