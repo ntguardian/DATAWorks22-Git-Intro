@@ -93,14 +93,18 @@ chl_transform <- mutate(chl_transform, chl = ifelse(chl == 0, 0.001, chl))
 Now fit a GAM.
 
 ```{r}
-chl_fit <- gam(chl ~
+chl_model <- chl ~
                  s(tr.bath, k = 60, bs = 'cr') +
                  s(jul.day, k = 120, bs = 'cr') +
-                 s(chl.sw, k = 60, bs = 'cr'),
+                 s(chl.sw, k = 60, bs = 'cr')
+
+chl_fit <- gam(chl_model,
                data = chl_transform,
                family = Gamma(link = "log"),
                method = "REML"
               )
+
+summary(chl_fit)
 ```
 
 ### Part (c)
@@ -120,14 +124,13 @@ predictions.*
 chl_transform <- mutate(chl_transform, split = sample(rep(
   c("train", "test"), times = round(nrow(chl_transform) * c(0.9, 0.1)))))
 
-chl_fit_train <- gam(chl ~
-                       s(tr.lon, k = 60, bs = 'cr') +
-                       s(tr.lat, k = 60, bs = 'cr') +
-                       s(tr.bath, k = 60, bs = 'cr') +
-                       s(jul.day, k = 120, bs = 'cr') +
-                       s(chl.sw, k = 60, bs = 'cr'),
+chl_fit_train <- gam(chl_model,
                      data = chl_transform %>% filter(split == "train"),
                      family = Gamma(link = "log"),
                      method = "REML"
                     )
+
+summary(chl_fit_train)
+
+# TODO: run on test set
 ```
