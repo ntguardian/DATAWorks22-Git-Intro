@@ -164,19 +164,47 @@ by eye.
 
 ### Part (b)
 
-*Using `mgcv::gam`, try modelling the data using a model of the sort suggested
+*Using `mgcv::gam`, try modeling the data using a model of the sort suggested
 (but with predictors transformed as in part (a)). Make sure that you use an
 appropriate family. It will probably help to increase the default basis
 dimensions used for smoothing, somewhat (especially for `jul.day`). Use the
 `"cr"` basis to avoid excessive computational cost.*
 
+Let's consider the range of the response variable:
+
 ```{r}
-gam(chl ~ s(lat) + s(lon), data = chl, family = gaussian)
+range(chl_transform$chl)
+```
+
+The gamma distribution makes for an attractive potential distribution family,
+due to being non-negative, but unfortunately there are concentrations of zero. A
+quick fix would be to add a small value to the zeroes, reflecting the fact that
+such a concentration likely is an issue with rounding.
+
+```{r}
+chl_transform <- mutate(chl_transform, chl = ifelse(chl == 0, 0.001, chl))
+```
+
+Now fit a GAM.
+
+```{r}
+chl_model <- chl ~
+                 s(tr.bath, k = 60, bs = 'cr') +
+                 s(jul.day, k = 120, bs = 'cr') +
+                 s(chl.sw, k = 60, bs = 'cr')
+
+chl_fit <- gam(chl_model,
+               data = chl_transform,
+               family = Gamma(link = "log"),
+               method = "REML"
+              )
+
+summary(chl_fit)
 ```
 
 ### Part (c)
 
-*In this sort of modelling the aim is to improve on simply using the satellite
+*In this sort of modeling the aim is to improve on simply using the satellite
 measurements as predictions of the direct measurements. Given the large number
 of data, it is easy to end up using rather complex models after quite a lot of
 examination of the data. It is therefore important to check that the model is
@@ -188,6 +216,17 @@ function `dev.resids`, which you can use to find the deviance of any set of
 predictions.*
 
 ```{r}
-# Your code here
+chl_transform <- mutate(chl_transform, split = sample(rep(
+  c("train", "test"), times = round(nrow(chl_transform) * c(0.9, 0.1)))))
+
+chl_fit_train <- gam(chl_model,
+                     data = chl_transform %>% filter(split == "train"),
+                     family = Gamma(link = "log"),
+                     method = "REML"
+                    )
+
+summary(chl_fit_train)
+
+# TODO: run on test set
 ```
 
