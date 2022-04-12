@@ -11,6 +11,101 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Problem 6
+
+*The data frame `ipo` contains data from Lowry and Schwert (2002) on the number
+of 'Initial Public Offerings' (IPOs) per month in the US financial markets
+between 1960 and 2002. IPOs are the process by which companies go public:
+ownership of the company is sold, in the form of shares, as a means of raising
+capital. Interest focuses on exploring the effect that several variables may
+have on numbers of IPOs per month, `n.ipo`. Of particular interest are the
+variables:*
+
+*`ir`: the average initial return from investing in an IPO. This is measured as
+precentage difference between the offer price of shares, and the share price
+after the first day of trading in the shares: this reflects by how much the
+offer price undervalues the company. One might expect companies to pay careful
+attention to this when deciding on IPO timing.*
+
+*`dp`: is the average percentage difference between the middle of the share
+price range proposed when the IPO is first filed, and the final offer price.
+This might be expected to carry information about the direction of changes in
+market sentiment.*
+
+*`reg.t`: the average time (in days) it takes from filing to offer. Obviously
+fluctuations in the length of time it takes to register have a direct impact on
+the number of companies making it through to offering in any given month.*
+
+*Find a suitable possioble model for explaining the number of IPOs in terms of
+these variables (as well as time, and time of year). Note that it is probably to
+look at lagged versions of `ir` and `dp`, since the length of the registration
+process precludes the number of IPOs in a month being driven by initial returns
+in that same month. In the interests of interpretability it is probably worth
+following the advice of Kim and Gu (2004) and setting `gamma=1.4` in the `gam`
+call. Look at appropriate model checking plots, and interpret the results of
+your model fitting.*
+
+```{r}
+# Your code here
+```
+
+## Problem 8
+
+*Sometimes rather unusual models can be expressed as GAMs. For example the data
+frame `blowfly` contains `counts` (not samples!) of adults in a laboratory
+population of blowflies, as reported in the classic ecological papers of
+Nicholson (1954a,b). One possible model for these data (basically Ellner et al.,
+1997) is that they are governed by the equation*
+
+$$\Delta n_{t + 1} = f_b(n_{t - k})n_{t - k} - f_d(n_t)n_t + \epsilon_t$$
+
+*where $n_t$ is the population at time $t$, $\Delta n_{t + 1} = n_{t + 1} -
+n_t$, $f_b$ and $f_d$ are smooth functions and the $\epsilon_t$ are i.i.d.
+errors with constant variance. The idea is that the change in population is
+given by the difference between the birth and death rates plus a random term.*
+per capita *birth rates and death rates are smooth functions of populations, and
+the delayed effect of births on the adult population is because it takes around
+12 days to go from egg to adult.*
+
+### Part (a)
+
+*Plot the blowfly data against time.*
+
+```{r}
+# Your code here
+```
+
+### Part (b)
+
+*Fit the proposed model, using `gam`. You will need to use `by` variables to do
+this. Comment on the estimates of $f_b$ and $f_d$. It is worth making $f_b$ and
+$f_d$ depend on log populations, rather than the populations themselves, to
+avoid leverage problems.*
+
+```{r}
+# Your code here
+```
+
+### Part (c)
+
+*Using the beginning of the real data as a starting sequence, iterate your
+estimated model forward in time, to the end of the data, and plot it. First do
+this with the noise terms set to zero, and then try again with an error standard
+deviation of up to 500 (much larger and the population tends to explode).
+Comment on the results. You will need to artificially restrict the population to
+the range seen in the real data, to avoid problems caused by extrapolating the
+model.*
+
+```{r}
+# Your code here
+```
+
+### Part (d)
+
+*Why is the approach used for these data unlikely to be widely applicable?*
+
+Your answer here
+
 ## Problem 9
 
 *This question is about creating models for calibration of satellite remote
@@ -95,3 +190,4 @@ predictions.*
 ```{r}
 # Your code here
 ```
+
