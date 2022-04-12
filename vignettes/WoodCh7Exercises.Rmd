@@ -94,8 +94,6 @@ Now fit a GAM.
 
 ```{r}
 chl_fit <- gam(chl ~
-                 s(tr.lon, k = 60, bs = 'cr') +
-                 s(tr.lat, k = 60, bs = 'cr') +
                  s(tr.bath, k = 60, bs = 'cr') +
                  s(jul.day, k = 120, bs = 'cr') +
                  s(chl.sw, k = 60, bs = 'cr'),
@@ -104,9 +102,6 @@ chl_fit <- gam(chl ~
                method = "REML"
               )
 ```
-
-Sadly the latitude and longitude are not interacted due to time to compute
-solution being too long.
 
 ### Part (c)
 
