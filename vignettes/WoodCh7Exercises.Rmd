@@ -75,7 +75,22 @@ appropriate family. It will probably help to increase the default basis
 dimensions used for smoothing, somewhat (especially for `jul.day`). Use the
 `"cr"` basis to avoid excessive computational cost.*
 
-Fit a GAM.
+Let's consider the range of the response variable:
+
+```{r}
+range(chl_transform$chl)
+```
+
+The gamma distribution makes for an attractive potential distribution family,
+due to being non-negative, but unfortunately there are concentrations of zero. A
+quick fix would be to add a small value to the zeroes, reflecting the fact that
+such a concentration likely is an issue with rounding.
+
+```{r}
+chl_transform <- mutate(chl_transform, chl = ifelse(chl == 0, 0.001, chl))
+```
+
+Now fit a GAM.
 
 ```{r}
 chl_fit <- gam(chl ~
@@ -89,6 +104,9 @@ chl_fit <- gam(chl ~
                method = "REML"
               )
 ```
+
+Sadly the latitude and longitude are not interacted due to time to compute
+solution being too long.
 
 ### Part (c)
 
@@ -104,5 +122,17 @@ function `dev.resids`, which you can use to find the deviance of any set of
 predictions.*
 
 ```{r}
-# Your code here
+chl_transform <- mutate(chl_transform, split = sample(rep(
+  c("train", "test"), times = round(nrow(chl_transform) * c(0.9, 0.1)))))
+
+chl_fit_train <- gam(chl ~
+                       s(tr.lon, k = 60, bs = 'cr') +
+                       s(tr.lat, k = 60, bs = 'cr') +
+                       s(tr.bath, k = 60, bs = 'cr') +
+                       s(jul.day, k = 120, bs = 'cr') +
+                       s(chl.sw, k = 60, bs = 'cr'),
+                     data = chl_transform %>% filter(split == "train"),
+                     family = Gamma(link = "log"),
+                     method = "REML"
+                    )
 ```
