@@ -171,7 +171,7 @@ dimensions used for smoothing, somewhat (especially for `jul.day`). Use the
 `"cr"` basis to avoid excessive computational cost.*
 
 ```{r}
-# Your code here
+gam(chl ~ s(lat) + s(lon), data = chl, family = gaussian)
 ```
 
 ### Part (c)
